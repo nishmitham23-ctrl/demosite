@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediConnect — Your Healthcare & Pharmacy Partner</title>
+  <meta name="description" content="Find trusted doctors near you, book appointments online, and order medicines from nearby pharmacies with MediConnect — Pakistan's modern healthcare platform." />
+  <meta name="keywords" content="doctor finder, pharmacy finder, appointment booking, healthcare, medicine delivery, Pakistan" />
+  <meta property="og:title" content="MediConnect — Your Healthcare Partner" />
+  <meta property="og:description" content="Find doctors, book appointments and order medicines from your nearby pharmacies." />
+
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* Inline critical styles for navbar mobile */
+    @media (max-width: 991px) {
+      #mc-nav-menu {
+        display: none;
+        position: fixed;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: white;
+        border-bottom: 1px solid var(--border);
+        padding: 1rem;
+        flex-direction: column;
+        gap: 0.25rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      }
+      #mc-nav-menu.show { display: flex; }
+      #mc-nav-menu .mc-nav-links { flex-direction: column; width: 100%; }
+      #mc-nav-menu .mc-nav-links a { width: 100%; text-align: center; }
+      #mc-nav-toggle { display: flex !important; }
+    }
+    @media (min-width: 992px) {
+      #mc-nav-toggle { display: none !important; }
+      #mc-nav-menu { display: flex !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="mc-navbar">
+    <a href="#" class="mc-brand me-auto" data-view="home">
+      <div class="mc-brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+      Medi<span>Connect</span>
+    </a>
+
+    <button id="mc-nav-toggle" class="mc-btn mc-btn-ghost mc-btn-sm ms-auto me-2" style="display:none;">
+      <i class="bi bi-list" style="font-size:1.3rem;"></i>
+    </button>
+
+    <div id="mc-nav-menu" class="d-flex align-items-center gap-3">
+      <ul class="mc-nav-links">
+        <li><a href="#" data-view="home">Home</a></li>
+        <li><a href="#" data-view="doctor">Find a Doctor</a></li>
+        <li><a href="#" data-view="pharmacy">Find a Pharmacy</a></li>
+        <li id="nav-history-link" style="display:none;"><a href="#" data-view="history">History</a></li>
+        <li><a href="#" data-view="about">About</a></li>
+      </ul>
+      <button id="navbar-profile-btn" class="mc-btn mc-btn-ghost mc-btn-sm mc-btn-pill" data-view="profile"
+        style="border:2px solid var(--border);transition:all 0.25s;">
+        <i class="bi bi-person-circle"></i> My Profile
+      </button>
+      <button id="navbar-logout-btn" class="mc-btn mc-btn-ghost mc-btn-sm mc-btn-pill text-danger" style="display:none;border:2px solid var(--border);transition:all 0.25s;" data-view="logout">
+        <i class="bi bi-box-arrow-right"></i> Logout
+      </button>
+      <button class="mc-btn mc-btn-primary mc-btn-sm mc-btn-pill ms-1" data-view="doctor">
+        <i class="bi bi-calendar-plus"></i> Book Now
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── APP WRAPPER ── -->
+  <div class="mc-page">
+
+    <!-- ══════════════════════════════════════════════════════════
+         VIEW: HOME
+    ══════════════════════════════════════════════════════════ -->
+    <div id="view-home" class="mc-view">
+
+      <!-- Hero -->
+      <section class="mc-hero">
+        <div class="mc-hero-blob mc-hero-blob-1"></div>
+        <div class="mc-hero-blob mc-hero-blob-2"></div>
+        <div class="container">
+          <div class="row align-items-center g-5">
+
+            <div class="col-lg-6" data-aos="fade-right">
+              <div class="mc-hero-badge">
+                <i class="bi bi-patch-check-fill"></i>
+                Trusted by 50,000+ Patients
+              </div>
+              <h1>Your Health, <br><span>Our Priority</span></h1>
+              <p>Find verified doctors near you, book appointments instantly, and get medicines delivered to your door — all in one place.</p>
+              <div class="d-flex gap-3 flex-wrap">
+                <button class="mc-btn mc-btn-secondary mc-btn-lg mc-btn-pill" data-view="doctor">
+                  <i class="bi bi-person-badge"></i> Find a Doctor
+                </button>
+                <button class="mc-btn mc-btn-outline mc-btn-lg mc-btn-pill" style="border-color:rgba(255,255,255,0.4);color:white;" data-view="pharmacy">
+                  <i class="bi bi-capsule"></i> Find a Pharmacy
+                </button>
+              </div>
+              <div class="mc-hero-stats">
+                <div>
+                  <div class="mc-hero-stat-value" data-count="500" data-suffix="+">0</div>
+                  <div class="mc-hero-stat-label">Verified Doctors</div>
+                </div>
+                <div>
+                  <div class="mc-hero-stat-value" data-count="120" data-suffix="+">0</div>
+                  <div class="mc-hero-stat-label">Pharmacies</div>
+                </div>
+                <div>
+                  <div class="mc-hero-stat-value" data-count="50000" data-suffix="+">0</div>
+                  <div class="mc-hero-stat-label">Patients Served</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="mc-entry-cards">
+                <a class="mc-entry-card doctor" href="#" data-view="doctor">
+                  <div class="mc-entry-card-icon">👨‍⚕️</div>
+                  <h3>Find a Doctor</h3>
+                  <p>Search by profile or symptoms. Book appointments online or by call.</p>
+                  <div class="mc-entry-card-arrow">
+                    <i class="bi bi-arrow-right"></i>
+                  </div>
+                </a>
+                <a class="mc-entry-card pharmacy" href="#" data-view="pharmacy">
+                  <div class="mc-entry-card-icon">💊</div>
+                  <h3>Find a Pharmacy</h3>
+                  <p>Order medicines online. Get them delivered to your door.</p>
+                  <div class="mc-entry-card-arrow">
+                    <i class="bi bi-arrow-right"></i>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Quick Action Card -->
+              <div style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-lg);padding:1.25rem;margin-top:1.25rem;backdrop-filter:blur(10px);">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;">
+                  <div style="width:36px;height:36px;background:rgba(0,201,167,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--secondary);font-size:1rem;">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                  </div>
+                  <span style="color:white;font-weight:700;font-size:0.9rem;">Quick Symptom Check</span>
+                </div>
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                  <button class="mc-btn mc-btn-sm" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.2);" onclick="quickSymptom('fever')">🤒 Fever</button>
+                  <button class="mc-btn mc-btn-sm" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.2);" onclick="quickSymptom('chest pain')">❤️ Chest Pain</button>
+                  <button class="mc-btn mc-btn-sm" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.2);" onclick="quickSymptom('headache')">🧠 Headache</button>
+                  <button class="mc-btn mc-btn-sm" style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.2);" onclick="quickSymptom('rash')">🩹 Skin Rash</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section class="mc-features">
+        <div class="container">
+          <div class="row justify-content-center mb-5">
+            <div class="col-lg-6 text-center">
+              <div class="mc-section-label"><i class="bi bi-stars me-1"></i>Why MediConnect?</div>
+              <h2 class="mc-section-title">Everything You Need for Your Health</h2>
+              <p class="text-muted">From finding the right specialist to getting medicines delivered — we've got you covered.</p>
+            </div>
+          </div>
+          <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+              <div class="mc-feature-card">
+                <div class="mc-feature-icon"><i class="bi bi-person-check"></i></div>
+                <h5 class="fw-700 mb-2">Verified Doctors</h5>
+                <p class="text-muted" style="font-size:0.875rem;">All doctors are PMDC registered and verified by our medical board.</p>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+              <div class="mc-feature-card">
+                <div class="mc-feature-icon"><i class="bi bi-calendar-check"></i></div>
+                <h5 class="fw-700 mb-2">Instant Booking</h5>
+                <p class="text-muted" style="font-size:0.875rem;">Book appointments in real-time with live slot availability checking.</p>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+              <div class="mc-feature-card">
+                <div class="mc-feature-icon"><i class="bi bi-truck"></i></div>
+                <h5 class="fw-700 mb-2">Home Delivery</h5>
+                <p class="text-muted" style="font-size:0.875rem;">Get medicines delivered to your doorstep. Cash on delivery available.</p>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+              <div class="mc-feature-card">
+                <div class="mc-feature-icon"><i class="bi bi-shield-check"></i></div>
+                <h5 class="fw-700 mb-2">100% Secure</h5>
+                <p class="text-muted" style="font-size:0.875rem;">Your health data is protected with industry-standard encryption.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works -->
+      <section style="padding:5rem 0;background:var(--bg-base);">
+        <div class="container">
+          <div class="row justify-content-center mb-5">
+            <div class="col-lg-6 text-center">
+              <div class="mc-section-label"><i class="bi bi-map me-1"></i>How It Works</div>
+              <h2 class="mc-section-title">Book an Appointment in 3 Simple Steps</h2>
+            </div>
+          </div>
+          <div class="row g-4 align-items-center justify-content-center">
+            <div class="col-md-4 text-center">
+              <div style="width:70px;height:70px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:1.5rem;margin:0 auto 1rem;box-shadow:0 8px 24px rgba(15,111,255,0.3);">1</div>
+              <h5 class="fw-700">Enter Your Location</h5>
+              <p class="text-muted" style="font-size:0.875rem;">Tell us your area so we can find doctors and pharmacies near you.</p>
+            </div>
+            <div class="col-md-1 text-center d-none d-md-block">
+              <i class="bi bi-arrow-right" style="font-size:1.5rem;color:var(--border);"></i>
+            </div>
+            <div class="col-md-4 text-center">
+              <div style="width:70px;height:70px;background:linear-gradient(135deg,var(--secondary),#00a287);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:1.5rem;margin:0 auto 1rem;box-shadow:0 8px 24px rgba(0,201,167,0.3);">2</div>
+              <h5 class="fw-700">Choose Your Doctor</h5>
+              <p class="text-muted" style="font-size:0.875rem;">Browse by profile, specialty, or describe your symptoms for AI-assisted matching.</p>
+            </div>
+            <div class="col-md-1 text-center d-none d-md-block">
+              <i class="bi bi-arrow-right" style="font-size:1.5rem;color:var(--border);"></i>
+            </div>
+            <div class="col-md-4 text-center">
+              <div style="width:70px;height:70px;background:linear-gradient(135deg,var(--accent),#e5581d);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:1.5rem;margin:0 auto 1rem;box-shadow:0 8px 24px rgba(255,107,53,0.3);">3</div>
+              <h5 class="fw-700">Book & Confirm</h5>
+              <p class="text-muted" style="font-size:0.875rem;">Select your preferred time slot, confirm your details, and you're all set!</p>
+            </div>
+          </div>
+          <div class="text-center mt-5">
+            <button class="mc-btn mc-btn-primary mc-btn-lg mc-btn-pill" data-view="doctor">
+              <i class="bi bi-calendar-plus me-1"></i> Book an Appointment Now
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Specialties Quick Access -->
+      <section style="padding:5rem 0;background:white;">
+        <div class="container">
+          <div class="row justify-content-center mb-4">
+            <div class="col-lg-6 text-center">
+              <div class="mc-section-label"><i class="bi bi-heart-pulse me-1"></i>Specialties</div>
+              <h2 class="mc-section-title">Browse by Medical Specialty</h2>
+            </div>
+          </div>
+          <div class="row g-3 justify-content-center">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <button class="w-100 p-3 text-center border rounded-3 bg-light" style="cursor:pointer;transition:all 0.25s;border:2px solid transparent!important;" onmouseover="this.style.borderColor='var(--primary)';this.style.background='var(--primary-light)'" onmouseout="this.style.borderColor='transparent';this.style.background='var(--bg-base)'" onclick="specialtySearch('General Physician')">
+                <div style="font-size:1.8rem;margin-bottom:6px;">🏥</div>
+                <div style="font-size:0.78rem;font-weight:700;color:var(--text-primary);">General Physician</div>
+              </button>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <button class="w-100 p-3 text-center border rounded-3 bg-light" style="cursor:pointer;transition:all 0.25s;border:2px solid transparent!important;" onmouseover="this.style.borderColor='var(--primary)';this.style.background='var(--primary-light)'" onmouseout="this.style.borderColor='transparent';this.style.background='var(--bg-base)'" onclick="specialtySearch('Cardiologist')">
+                <div style="font-size:1.8rem;margin-bottom:6px;">❤️</div>
+                <div style="font-size:0.78rem;font-weight:700;color:var(--text-primary);">Cardiologist</div>
+              </button>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <button class="w-100 p-3 text-center border rounded-3 bg-light" style="cursor:pointer;transition:all 0.25s;border:2px solid transparent!important;" onmouseover="this.style.borderColor='var(--primary)';this.style.background='var(--primary-light)'" onmouseout="this.style.borderColor='transparent';this.style.background='var(--bg-base)'" onclick="specialtySearch('Neurologist')">
+                <div style="font-size:1.8rem;margin-bottom:6px;">🧠</div>
+                <div style="font-size:0.78rem;font-weight:700;color:var(--text-primary);">Neurologist</div>
+              </button>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <button class="w-100 p-3 text-center border rounded-3 bg-light" style="cursor:pointer;transition:all 0.25s;border:2px solid transparent!important;" onmouseover="this.style.borderColor='var(--primary)';this.style.background='var(--primary-light)'" onmouseout="this.style.borderColor='transparent';this.style.background='var(--bg-base)'" onclick="specialtySearch('Dermatologist')">
+                <div style="font-size:1.8rem;margin-bottom:6px;">🧴</div>
+                <div style="font-size:0.78rem;font-weight:700;color:var(--text-primary);">Dermatologist</div>
+              </button>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <button class="w-100 p-3 text-center border rounded-3 bg-light" style="cursor:pointer;transition:all 0.25s;border:2px solid transparent!important;" onmouseover="this.style.borderColor='var(--primary)';this.style.background='var(--primary-light)'" onmouseout="this.style.borderColor='transparent';this.style.background='var(--bg-base)'" onclick="specialtySearch('Pediatrician')">
+                <div style="font-size:1.8rem;margin-bottom:6px;">👶</div>
+                <div style="font-size:0.78rem;font-weight:700;color:var(--text-primary);">Pediatrician</div>
+              </button>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <button class="w-100 p-3 text-center border rounded-3 bg-light" style="cursor:pointer;transition:all 0.25s;border:2px solid transparent!important;" onmouseover="this.style.borderColor='var(--primary)';this.style.background='var(--primary-light)'" onmouseout="this.style.borderColor='transparent';this.style.background='var(--bg-base)'" onclick="specialtySearch('Gynecologist')">
+                <div style="font-size:1.8rem;margin-bottom:6px;">🌺</div>
+                <div style="font-size:0.78rem;font-weight:700;color:var(--text-primary);">Gynecologist</div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="mc-footer">
+        <div class="container">
+          <div class="row g-4">
+            <div class="col-lg-4">
+              <div class="mc-footer-brand">Medi<span>Connect</span></div>
+              <p style="font-size:0.85rem;color:rgba(255,255,255,0.55);max-width:280px;margin-top:0.75rem;">
+                Pakistan's modern healthcare platform. Find doctors, book appointments, and order medicines — all in one place.
+              </p>
+              <div class="d-flex gap-2 mt-3">
+                <a href="#" style="width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);text-decoration:none;" onmouseover="this.style.background='var(--primary)';this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.color='rgba(255,255,255,0.7)'"><i class="bi bi-facebook"></i></a>
+                <a href="#" style="width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);text-decoration:none;" onmouseover="this.style.background='var(--primary)';this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.color='rgba(255,255,255,0.7)'"><i class="bi bi-twitter-x"></i></a>
+                <a href="#" style="width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);text-decoration:none;" onmouseover="this.style.background='var(--primary)';this.style.color='white'" onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.color='rgba(255,255,255,0.7)'"><i class="bi bi-instagram"></i></a>
+              </div>
+            </div>
+            <div class="col-6 col-lg-2">
+              <h6>Services</h6>
+              <ul class="mc-footer-links">
+                <li><a href="#" data-view="doctor">Find a Doctor</a></li>
+                <li><a href="#" data-view="pharmacy">Find a Pharmacy</a></li>
+                <li><a href="#">Lab Tests</a></li>
+                <li><a href="#">Health Packages</a></li>
+              </ul>
+            </div>
+            <div class="col-6 col-lg-2">
+              <h6>Specialties</h6>
+              <ul class="mc-footer-links">
+                <li><a href="#" onclick="specialtySearch('General Physician')">General Physician</a></li>
+                <li><a href="#" onclick="specialtySearch('Cardiologist')">Cardiologist</a></li>
+                <li><a href="#" onclick="specialtySearch('Neurologist')">Neurologist</a></li>
+                <li><a href="#" onclick="specialtySearch('Dermatologist')">Dermatologist</a></li>
+              </ul>
+            </div>
+            <div class="col-6 col-lg-2">
+              <h6>Company</h6>
+              <ul class="mc-footer-links">
+                <li><a href="#" data-view="about">About Us</a></li>
+                <li><a href="#">Careers</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Press</a></li>
+              </ul>
+            </div>
+            <div class="col-6 col-lg-2">
+              <h6>Support</h6>
+              <ul class="mc-footer-links">
+                <li><a href="#">Help Center</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Contact Us</a></li>
+              </ul>
+            </div>
+          </div>
+          <hr class="mc-footer-divider" />
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mc-footer-bottom">
+            <span>© 2025 MediConnect. All rights reserved.</span>
+            <span>Made with <i class="bi bi-heart-fill" style="color:#ef4444;"></i> in Pakistan</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         VIEW: DOCTOR WORKFLOW
+    ══════════════════════════════════════════════════════════ -->
+    <div id="view-doctor" class="mc-view">
+
+      <!-- Section Header -->
+      <div class="mc-section-header">
+        <div class="container">
+          <h2><i class="bi bi-person-badge me-2"></i>Find a Doctor & Book Appointment</h2>
+          <p>Locate verified doctors near you and schedule your visit online</p>
+        </div>
+      </div>
+
+      <div class="mc-workflow">
+        <div class="container">
+          <div class="mc-workflow-layout">
+
+            <!-- Sidebar Progress -->
+            <aside class="mc-sidebar">
+              <div style="font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.75rem;">
+                <i class="bi bi-list-check me-1"></i>Your Progress
+              </div>
+
+              <div class="mc-sidebar-step active" data-step="1">
+                <div class="mc-sidebar-step-num">1</div>
+                <div>
+                  <div class="mc-sidebar-step-label">Enter Location</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Area or map selection</div>
+                </div>
+              </div>
+
+              <div class="mc-sidebar-step" data-step="2">
+                <div class="mc-sidebar-step-num">2</div>
+                <div>
+                  <div class="mc-sidebar-step-label">Select Doctor</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">By profile or symptoms</div>
+                </div>
+              </div>
+
+              <div class="mc-sidebar-step" data-step="3">
+                <div class="mc-sidebar-step-num">3</div>
+                <div>
+                  <div class="mc-sidebar-step-label">Book Appointment</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Pick a date & time slot</div>
+                </div>
+              </div>
+
+              <!-- Info Panel -->
+              <div style="background:var(--primary-light);border-radius:var(--radius-lg);padding:1.25rem;margin-top:1.5rem;">
+                <div style="font-size:0.8rem;font-weight:700;color:var(--primary);margin-bottom:0.75rem;">
+                  <i class="bi bi-lightbulb me-1"></i>Demo Tip
+                </div>
+                <p style="font-size:0.78rem;color:var(--text-secondary);margin:0;">
+                  Try searching <strong>Gulberg</strong>, <strong>DHA</strong>, <strong>Johar Town</strong>, or <strong>Model Town</strong> to see doctors.
+                  <br/><br/>
+                  For history auto-fill, enter:<br/>
+                  Name: <strong>Nishmitha</strong><br/>
+                  Gender: <strong>Female</strong><br/>
+                  Area: <strong>Bangalore</strong><br/>
+                  Then select Dr. Gopinath Rao.
+                </p>
+              </div>
+
+              <!-- History Sidebar (populated by updateDoctorHistorySidebar) -->
+              <div style="background:var(--bg-base);border-radius:var(--radius-lg);padding:1.25rem;margin-top:1rem;">
+                <div style="font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:0.75rem;">
+                  <i class="bi bi-clock-history me-1"></i>Recent Appointments
+                </div>
+                <div id="doctor-history-sidebar">
+                  <p style="font-size:0.78rem;color:var(--text-muted);margin:0;">No past appointments.</p>
+                </div>
+              </div>
+
+              <button class="mc-btn mc-btn-ghost mc-btn-sm mc-btn-full mt-3" data-view="home">
+                <i class="bi bi-arrow-left"></i> Back to Home
+              </button>
+            </aside>
+
+            <!-- Main Content -->
+            <main id="doctor-workflow-content">
+              <!-- Dynamically rendered by app.js -->
+            </main>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         VIEW: PHARMACY WORKFLOW
+    ══════════════════════════════════════════════════════════ -->
+    <div id="view-pharmacy" class="mc-view">
+
+      <!-- Section Header -->
+      <div class="mc-section-header">
+        <div class="container">
+          <h2><i class="bi bi-capsule me-2"></i>Find Nearby Pharmacies</h2>
+          <p>Order medicines online with home delivery — Cash on Delivery available</p>
+        </div>
+      </div>
+
+      <div class="mc-workflow">
+        <div class="container">
+          <div class="mc-workflow-layout">
+
+            <!-- Sidebar Progress -->
+            <aside class="mc-sidebar">
+              <div style="font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.75rem;">
+                <i class="bi bi-list-check me-1"></i>Your Progress
+              </div>
+
+              <div class="mc-sidebar-step active" data-step="1">
+                <div class="mc-sidebar-step-num">1</div>
+                <div>
+                  <div class="mc-sidebar-step-label">Find Pharmacies</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Enter your area</div>
+                </div>
+              </div>
+
+              <div class="mc-sidebar-step" data-step="2">
+                <div class="mc-sidebar-step-num">2</div>
+                <div>
+                  <div class="mc-sidebar-step-label">Place Order</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Address & prescription</div>
+                </div>
+              </div>
+
+              <!-- Info Panel -->
+              <div style="background:linear-gradient(135deg,rgba(0,201,167,0.1),rgba(0,162,135,0.05));border:1px solid rgba(0,201,167,0.3);border-radius:var(--radius-lg);padding:1.25rem;margin-top:1.5rem;">
+                <div style="font-size:0.8rem;font-weight:700;color:var(--secondary);margin-bottom:0.75rem;">
+                  <i class="bi bi-shield-check me-1"></i>Delivery Policy
+                </div>
+                <p style="font-size:0.78rem;color:var(--text-secondary);margin:0;">
+                  💵 <strong>Cash on Delivery</strong> — Pay when your medicine arrives at your door.<br/><br/>
+                  📱 Out-of-stock items trigger an <strong>SMS notification</strong> to your registered number.<br/><br/>
+                  ⏱️ Estimated delivery: <strong>30–60 minutes</strong>
+                </p>
+              </div>
+
+              <div style="background:var(--primary-light);border-radius:var(--radius-lg);padding:1.25rem;margin-top:1rem;">
+                <div style="font-size:0.8rem;font-weight:700;color:var(--primary);margin-bottom:0.5rem;">
+                  <i class="bi bi-lightbulb me-1"></i>Demo Tip
+                </div>
+                <p style="font-size:0.78rem;color:var(--text-secondary);margin:0;">
+                  Search <strong>Gulberg</strong> or <strong>Johar Town</strong> to see pharmacies with out-of-stock medicines (triggers SMS demo).
+                </p>
+              </div>
+
+              <button class="mc-btn mc-btn-ghost mc-btn-sm mc-btn-full mt-3" data-view="home">
+                <i class="bi bi-arrow-left"></i> Back to Home
+              </button>
+            </aside>
+
+            <!-- Main Content -->
+            <main id="pharmacy-workflow-content">
+              <!-- Dynamically rendered by app.js -->
+            </main>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         VIEW: ABOUT
+    ══════════════════════════════════════════════════════════ -->
+    <div id="view-about" class="mc-view">
+      <div class="mc-section-header">
+        <div class="container">
+          <h2><i class="bi bi-info-circle me-2"></i>About MediConnect</h2>
+          <p>Building Pakistan's most trusted digital healthcare ecosystem</p>
+        </div>
+      </div>
+      <div style="padding:4rem 0;background:white;">
+        <div class="container">
+          <div class="row g-5 align-items-center">
+            <div class="col-lg-6">
+              <div class="mc-section-label"><i class="bi bi-heart-pulse me-1"></i>Our Mission</div>
+              <h2 class="mc-section-title">Healthcare Made Simple & Accessible</h2>
+              <p class="text-muted mb-4">MediConnect bridges the gap between patients and healthcare providers in Pakistan. We believe quality healthcare should be accessible to everyone — from finding the right specialist to getting medicines at your doorstep.</p>
+              <div class="row g-3">
+                <div class="col-6">
+                  <div style="padding:1.25rem;background:var(--bg-base);border-radius:var(--radius-lg);">
+                    <div style="font-size:1.8rem;font-weight:800;color:var(--primary);font-family:'Plus Jakarta Sans',sans-serif;">500+</div>
+                    <div style="font-size:0.85rem;color:var(--text-muted);">Verified Doctors</div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div style="padding:1.25rem;background:var(--bg-base);border-radius:var(--radius-lg);">
+                    <div style="font-size:1.8rem;font-weight:800;color:var(--secondary);font-family:'Plus Jakarta Sans',sans-serif;">120+</div>
+                    <div style="font-size:0.85rem;color:var(--text-muted);">Partner Pharmacies</div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div style="padding:1.25rem;background:var(--bg-base);border-radius:var(--radius-lg);">
+                    <div style="font-size:1.8rem;font-weight:800;color:var(--accent);font-family:'Plus Jakarta Sans',sans-serif;">50K+</div>
+                    <div style="font-size:0.85rem;color:var(--text-muted);">Patients Served</div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div style="padding:1.25rem;background:var(--bg-base);border-radius:var(--radius-lg);">
+                    <div style="font-size:1.8rem;font-weight:800;color:var(--success);font-family:'Plus Jakarta Sans',sans-serif;">15+</div>
+                    <div style="font-size:0.85rem;color:var(--text-muted);">Cities Covered</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div style="background:linear-gradient(135deg,#0f2447,#1a3a6e);border-radius:var(--radius-xl);padding:2.5rem;color:white;">
+                <h4 style="font-size:1.2rem;margin-bottom:1.5rem;">Our Core Values</h4>
+                <div style="display:flex;flex-direction:column;gap:1.25rem;">
+                  <div style="display:flex;gap:1rem;align-items:flex-start;">
+                    <div style="width:44px;height:44px;background:rgba(15,111,255,0.3);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem;">🔒</div>
+                    <div>
+                      <div style="font-weight:700;margin-bottom:3px;">Patient Privacy First</div>
+                      <div style="font-size:0.83rem;color:rgba(255,255,255,0.65);">Your medical data is encrypted and never sold to third parties.</div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:1rem;align-items:flex-start;">
+                    <div style="width:44px;height:44px;background:rgba(0,201,167,0.3);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem;">✅</div>
+                    <div>
+                      <div style="font-weight:700;margin-bottom:3px;">Verified Quality</div>
+                      <div style="font-size:0.83rem;color:rgba(255,255,255,0.65);">Every doctor and pharmacy partner undergoes rigorous verification.</div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:1rem;align-items:flex-start;">
+                    <div style="width:44px;height:44px;background:rgba(255,107,53,0.3);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem;">💊</div>
+                    <div>
+                      <div style="font-weight:700;margin-bottom:3px;">Affordable Care</div>
+                      <div style="font-size:0.83rem;color:rgba(255,255,255,0.65);">No hidden fees. Cash on delivery for medicines. Pay at hospital for consultations.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-5">
+            <button class="mc-btn mc-btn-primary mc-btn-lg mc-btn-pill me-3" data-view="doctor">
+              <i class="bi bi-person-badge me-1"></i> Find a Doctor
+            </button>
+            <button class="mc-btn mc-btn-secondary mc-btn-lg mc-btn-pill" data-view="pharmacy">
+              <i class="bi bi-capsule me-1"></i> Find a Pharmacy
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         VIEW: LOGIN / SIGNUP
+    ══════════════════════════════════════════════════════════ -->
+    <div id="view-login" class="mc-view">
+      <div class="container py-5 d-flex justify-content-center align-items-center" style="min-height: calc(100vh - var(--header-h) - 100px);">
+        <div class="mc-step-panel" style="max-width: 480px; width: 100%; box-shadow: var(--shadow-lg); border-radius: var(--radius-xl);">
+          <div class="text-center mb-4">
+            <div class="mc-brand-icon mx-auto mb-2" style="width: 50px; height: 50px; font-size: 1.4rem;">
+              <i class="bi bi-heart-pulse-fill"></i>
+            </div>
+            <h3 class="fw-800" id="login-card-title">Welcome Back</h3>
+            <p class="text-muted" id="login-card-subtitle">Log in to manage appointments & pharmacy orders</p>
+          </div>
+
+          <div id="login-alert-container"></div>
+
+          <!-- Login Form -->
+          <form id="login-form" onsubmit="handleLoginSubmit(event)">
+            <div class="mb-3">
+              <label class="mc-label">Email Address</label>
+              <div class="mc-input-wrap">
+                <i class="bi bi-envelope"></i>
+                <input type="email" id="login-email" class="mc-input" placeholder="e.g. nishmitham23@gmail.com" required autocomplete="username" />
+              </div>
+            </div>
+            <div class="mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <label class="mc-label mb-0">Password</label>
+                <a href="#" onclick="forgotPassword(event)" style="font-size: 0.78rem; text-decoration: none; color: var(--primary); font-weight: 600;">Forgot?</a>
+              </div>
+              <div class="mc-input-wrap" style="position:relative;">
+                <i class="bi bi-lock"></i>
+                <input type="password" id="login-password" class="mc-input" placeholder="••••••••" required autocomplete="current-password" style="padding-right:2.8rem;" />
+                <button type="button" onclick="togglePasswordVisibility('login-password','login-pwd-eye')" tabindex="-1" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;padding:0;cursor:pointer;color:var(--text-muted);font-size:1rem;">
+                  <i class="bi bi-eye" id="login-pwd-eye"></i>
+                </button>
+              </div>
+            </div>
+            <button type="submit" class="mc-btn mc-btn-primary mc-btn-full mb-3">
+              <i class="bi bi-box-arrow-in-right"></i> Log In
+            </button>
+          </form>
+
+          <!-- Register Form -->
+          <form id="register-form" class="hidden" onsubmit="handleRegisterSubmit(event)">
+            <div class="mb-3">
+              <label class="mc-label">Full Name *</label>
+              <div class="mc-input-wrap">
+                <i class="bi bi-person"></i>
+                <input type="text" id="reg-name" class="mc-input" placeholder="e.g. Nishmitha" required />
+              </div>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-md-6">
+                <label class="mc-label">Gender *</label>
+                <div class="mc-input-wrap">
+                  <i class="bi bi-gender-ambiguous"></i>
+                  <select id="reg-gender" class="mc-select" required style="padding-left: 38px;">
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="mc-label">Living Area *</label>
+                <div class="mc-input-wrap">
+                  <i class="bi bi-geo-alt"></i>
+                  <input type="text" id="reg-area" class="mc-input" placeholder="e.g. Bangalore" required />
+                </div>
+              </div>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-md-6">
+                <label class="mc-label">Phone *</label>
+                <div class="mc-input-wrap">
+                  <i class="bi bi-telephone"></i>
+                  <input type="tel" id="reg-phone" class="mc-input" placeholder="+92-300-1234567" required />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="mc-label">Email *</label>
+                <div class="mc-input-wrap">
+                  <i class="bi bi-envelope"></i>
+                  <input type="email" id="reg-email" class="mc-input" placeholder="nishmitham23@gmail.com" required />
+                </div>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label class="mc-label">Password *</label>
+              <div class="mc-input-wrap" style="position:relative;">
+                <i class="bi bi-lock"></i>
+                <input type="password" id="reg-password" class="mc-input" placeholder="Create password" required style="padding-right:2.8rem;" />
+                <button type="button" onclick="togglePasswordVisibility('reg-password','reg-pwd-eye')" tabindex="-1" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;padding:0;cursor:pointer;color:var(--text-muted);font-size:1rem;">
+                  <i class="bi bi-eye" id="reg-pwd-eye"></i>
+                </button>
+              </div>
+            </div>
+            <button type="submit" class="mc-btn mc-btn-primary mc-btn-full mb-3">
+              <i class="bi bi-person-plus"></i> Create Account
+            </button>
+          </form>
+
+          <!-- Toggle Link -->
+          <div class="text-center mt-3" style="font-size: 0.85rem;">
+            <span id="login-toggle-text">Don't have an account?</span>
+            <a href="#" id="login-toggle-link" onclick="toggleAuthMode(event)" style="font-weight: 700; color: var(--primary); text-decoration: none; margin-left: 4px;">Sign Up</a>
+          </div>
+
+          <!-- Demo Credentials -->
+          <div class="mt-4 p-3 border rounded-3 bg-light" id="demo-credentials-box">
+            <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px;">
+              <i class="bi bi-shield-lock me-1 text-primary"></i>Demo Account Credentials
+            </div>
+            <div style="font-size: 0.78rem; color: var(--text-secondary);">
+              <div>Email: <strong>nishmitham23@gmail.com</strong></div>
+              <div>Password: <strong>password123</strong></div>
+              <div class="mt-2 text-muted" style="font-size: 0.72rem;">* Log in with these details to access patient history for Nishmitha.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         VIEW: HISTORY
+    ══════════════════════════════════════════════════════════ -->
+    <div id="view-history" class="mc-view">
+      <div class="mc-section-header">
+        <div class="container">
+          <h2><i class="bi bi-clock-history me-2"></i>My Appointment History</h2>
+          <p>View, track, or cancel your scheduled appointments</p>
+        </div>
+      </div>
+
+      <div style="padding: 3rem 0; background: var(--bg-base);">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-10">
+
+              <div class="mc-step-panel">
+                <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+                  <h4 class="mc-step-title mb-0"><i class="bi bi-calendar-check me-2 text-primary"></i>Appointments Log</h4>
+                  <div class="d-flex gap-2">
+                    <button class="mc-btn mc-btn-ghost mc-btn-sm active" id="history-filter-all" onclick="filterHistory('all')">All</button>
+                    <button class="mc-btn mc-btn-ghost mc-btn-sm" id="history-filter-active" onclick="filterHistory('active')">Active</button>
+                    <button class="mc-btn mc-btn-ghost mc-btn-sm" id="history-filter-cancelled" onclick="filterHistory('cancelled')">Cancelled</button>
+                  </div>
+                </div>
+
+                <div class="table-responsive">
+                  <table class="table align-middle" style="border-collapse: separate; border-spacing: 0 10px;">
+                    <thead>
+                      <tr class="text-muted" style="font-size: 0.85rem; border-bottom: 2px solid var(--border);">
+                        <th style="padding: 12px 10px;">Doctor</th>
+                        <th style="padding: 12px 10px;">Specialty</th>
+                        <th style="padding: 12px 10px;">Date & Time</th>
+                        <th style="padding: 12px 10px;">Location</th>
+                        <th style="padding: 12px 10px;">Patient</th>
+                        <th style="padding: 12px 10px;">Status</th>
+                        <th style="padding: 12px 10px; text-align: center;">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="history-table-body">
+                      <!-- Rendered dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Empty State -->
+                <div id="history-empty-state" class="mc-empty-state text-center p-5 hidden">
+                  <div style="font-size: 3rem; margin-bottom: 1rem;">📅</div>
+                  <h5 class="fw-700">No Appointments Found</h5>
+                  <p class="text-muted mb-4">You have not scheduled any appointments yet.</p>
+                  <button class="mc-btn mc-btn-primary mc-btn-pill" data-view="doctor">
+                    <i class="bi bi-calendar-plus me-1"></i> Book an Appointment
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.mc-page -->
+
+  <!-- ── SCRIPTS ── -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+  <script src="database.js"></script>
+  <script src="storage.js"></script>
+  <script src="app.js"></script>
+
+  <!-- Helper functions for home page quick actions -->
+  <script>
+    function quickSymptom(symptom) {
+      initDoctorWorkflow();
+      setTimeout(() => {
+        submitDoctorArea("Gulberg", symptom);
+      }, 400);
+    }
+
+    async function submitDoctorArea(area, autoSymptom) {
+      AppState.doctorWorkflow.area = area;
+      AppState.doctorWorkflow.step = 2;
+      updateDoctorSidebar(2);
+      renderDoctorStep2Options();
+      if (autoSymptom) {
+        setTimeout(() => {
+          selectDoctorMode("symptoms");
+          setTimeout(() => {
+            const el = document.getElementById("sym-text");
+            if (el) {
+              el.value = `I have ${autoSymptom}`;
+              document.getElementById("sym-age").value = "30";
+              document.getElementById("sym-gender").value = "Male";
+            }
+          }, 200);
+        }, 200);
+      }
+    }
+
+    function specialtySearch(specialty) {
+      initDoctorWorkflow();
+      setTimeout(async () => {
+        AppState.doctorWorkflow.area = "All Areas";
+        AppState.doctorWorkflow.step = 2;
+        updateDoctorSidebar(2);
+        renderDoctorStep2Options();
+        document.getElementById("opt-profile").classList.add("active");
+        await renderDoctorProfileList(specialty);
+      }, 350);
+    }
+
+    window.quickSymptom = quickSymptom;
+    window.specialtySearch = specialtySearch;
+  </script>
+</body>
+</html>
